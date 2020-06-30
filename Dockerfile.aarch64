@@ -1,7 +1,7 @@
 ###
 # Build stage
 ##
-FROM balenalib/%%BALENA_MACHINE_NAME%%-node:10-build as build
+FROM balenalib/raspberrypi3-node:12-buster-build as build
 
 # Move to app dir
 WORKDIR /usr/src/app
@@ -16,7 +16,7 @@ RUN install_packages \
   libdbus-1-dev \
   libgtk2.0-dev \
   libnotify-dev \
-  libgnome-keyring-dev \
+  libsecret-1-0 \
   libgconf2-dev \
   libasound2-dev \
   libcap-dev \
@@ -33,13 +33,13 @@ COPY ./app/package.json .
 
 # Install npm modules for the application
 RUN    JOBS=MAX npm install --unsafe-perm --production \
-    && node_modules/.bin/electron-rebuild
+  && node_modules/.bin/electron-rebuild
 
 
 ###
 # Runtime
 ##
-FROM balenalib/%%BALENA_MACHINE_NAME%%-node:10-run
+FROM balenalib/raspberrypi3-node:12-buster-run
 
 # Move to app dir
 WORKDIR /usr/src/app
@@ -56,7 +56,7 @@ RUN install_packages \
   libdbus-1-3 \
   libgtk2.0 \
   libnotify4 \
-  libgnome-keyring0 \
+  libsecret-1-0 \
   libgconf-2-4 \
   libasound2 \
   libcap2 \
